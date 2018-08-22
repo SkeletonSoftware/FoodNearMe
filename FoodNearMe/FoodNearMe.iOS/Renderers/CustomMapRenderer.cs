@@ -2,23 +2,19 @@
 using FoodNearMe.Models;
 using MapKit;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using UIKit;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
 using Xamarin.Forms.Platform.iOS;
-using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using CoreGraphics;
 using System.Drawing;
+using FoodNearMe.Controls;
 
-[assembly: ExportRenderer(typeof(FoodNearMe.Controls.Map), typeof(FoodNearMe.iOS.Renderers.MapRenderer))]
+[assembly: ExportRenderer(typeof(CustomMap), typeof(FoodNearMe.iOS.Renderers.CustomMapRenderer))]
 namespace FoodNearMe.iOS.Renderers
 {
-    public class MapRenderer : Xamarin.Forms.Maps.iOS.MapRenderer
+    public class CustomMapRenderer : Xamarin.Forms.Maps.iOS.MapRenderer
     {
-        private MKMapView NativeMap { get { return (this.NativeView as MapRenderer).Control as MKMapView; } }
         private ObservableCollection<CustomPin> customPins;
 
         protected override void OnElementChanged(ElementChangedEventArgs<View> e)
@@ -27,38 +23,44 @@ namespace FoodNearMe.iOS.Renderers
 
             if (e.OldElement != null)
             {
-                (this.Element as Controls.Map).CustomPins.CollectionChanged -= FormsMap_PinsUpdated;
+                ((CustomMap)e.OldElement).CustomPins.CollectionChanged -= FormsMap_PinsUpdated;
+
+                var nativeMap = Control as MKMapView;
+                if (nativeMap != null)
+                {
+                    nativeMap.GetViewForAnnotation = null;
+                }
             }
 
             if (e.NewElement != null)
             {
-                var formsMap = (Controls.Map)e.NewElement;
+                ((CustomMap)e.NewElement).CustomPins.CollectionChanged += FormsMap_PinsUpdated;
+
                 var nativeMap = Control as MKMapView;
-                customPins = formsMap.CustomPins;
-                formsMap.CustomPins.CollectionChanged += FormsMap_PinsUpdated;
-                nativeMap.GetViewForAnnotation = GetViewForAnnotation;
+                if (nativeMap != null)
+                {
+                    nativeMap.GetViewForAnnotation = GetViewForAnnotation;
+                }
             }
         }
 
         private void FormsMap_PinsUpdated(object sender, EventArgs e)
         {
-            if (NativeMap != null)
+            var nativeMap = Control as MKMapView;
+            if (nativeMap != null)
             {
-                customPins = (this.Element as Controls.Map).CustomPins;
-                for (int i = 0; i < customPins.Count; i++)
+                customPins = ((CustomMap)Element).CustomPins;
+                foreach (var pin in customPins)
                 {
-                    var annotation = new ColorPointAnnotation(customPins[i]);
-                    NativeMap.AddAnnotation(annotation);
+                    var annotation = new ColorPointAnnotation(pin);
+                    nativeMap.AddAnnotation(annotation);
                 }
             }
         }
 
-        MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
+        private MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
         {
             MKAnnotationView annotationView = null;
-
-            if (annotation is MKUserLocation)
-                return null;
 
             var anno = annotation as MKPointAnnotation;
             var customPin = GetCustomPin(anno);
@@ -70,16 +72,39 @@ namespace FoodNearMe.iOS.Renderers
             {
                 annotationView = new MKAnnotationView(annotation, "pin");
                 ColorPointAnnotation colorPointAnnotation = annotation as ColorPointAnnotation;
-                annotationView.Image = GetPinImage(colorPointAnnotation.pinColor);
+                if (colorPointAnnotation != null)
+                {
+                    annotationView.Image = GetPinImage(colorPointAnnotation.pinColor);
+                }
             }
             annotationView.CanShowCallout = true;
 
             return annotationView;
         }
+        
+        private CustomPin GetCustomPin(MKPointAnnotation annotation)
+        {
+            if (annotation == null) return null;
+
+            var position = new Gps()
+            {
+                Latitude = annotation.Coordinate.Latitude,
+                Longitude = annotation.Coordinate.Longitude
+            };
+
+            foreach (var pin in customPins)
+            {
+                if (pin.Location.Equals(position))
+                {
+                    return pin;
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// Získá pin dle zadané barvy
-        /// barevný podlkad vytvoří ze šablony pin.png
+        /// barevný podklad vytvoří ze šablony pin.png
         /// černý obrys pin_contour.png
         /// </summary>
         /// <param name="color"></param>
@@ -113,29 +138,9 @@ namespace FoodNearMe.iOS.Renderers
             }
             return pinImage;
         }
-
-        CustomPin GetCustomPin(MKPointAnnotation annotation)
-        {
-            if (annotation == null) return null;
-
-            var position = new Gps()
-            {
-                Latitude = annotation.Coordinate.Latitude,
-                Longitude = annotation.Coordinate.Longitude
-            };
-
-            foreach (var pin in customPins)
-            {
-                if (pin.Location.Equals(position))
-                {
-                    return pin;
-                }
-            }
-            return null;
-        }
     }
 
-    class ColorPointAnnotation : MKPointAnnotation
+    sealed class ColorPointAnnotation : MKPointAnnotation
     {
         public UIColor pinColor;
 

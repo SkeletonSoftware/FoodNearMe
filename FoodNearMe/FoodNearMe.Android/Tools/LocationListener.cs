@@ -7,7 +7,7 @@ using Android.Gms.Common;
 
 namespace FoodNearMe.Droid.Tools
 {
-    class FusedTaskListener : Java.Lang.Object, GoogleApiClient.IConnectionCallbacks, GoogleApiClient.IOnConnectionFailedListener, Android.Gms.Location.ILocationListener
+    class LocationListener : Java.Lang.Object, GoogleApiClient.IConnectionCallbacks, GoogleApiClient.IOnConnectionFailedListener, Android.Gms.Location.ILocationListener
     {
         /// <summary>
         /// Událost která se volá, pokud dojde k pøipojení k GooglePlayAPI
@@ -22,7 +22,7 @@ namespace FoodNearMe.Droid.Tools
 
         private TaskCompletionSource<Gps> source;
 
-        public FusedTaskListener()
+        public LocationListener()
         {
 
         }

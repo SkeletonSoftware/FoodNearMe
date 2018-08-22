@@ -1,16 +1,16 @@
 using System;
-using FoodNearMe.Services;
-using FoodNearMe.Droid.Tools;
 using System.Threading.Tasks;
 using FoodNearMe.Models;
 using Android.Gms.Common.Apis;
 using Android.Gms.Location;
+using FoodNearMe.DependencyServices;
 using Xamarin.Forms;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using LocationListener = FoodNearMe.Droid.Tools.LocationListener;
 
-[assembly: Dependency(typeof(FoodNearMe.Droid.Services.Location))]
-namespace FoodNearMe.Droid.Services
+[assembly: Dependency(typeof(FoodNearMe.Droid.DependencyServices.Location))]
+namespace FoodNearMe.Droid.DependencyServices
 {
     public class Location : ILocation
     {
@@ -19,7 +19,7 @@ namespace FoodNearMe.Droid.Services
             if (await RequestPermissions())
             {
                 //Vytvoøení listeneru
-                var locationListener = new FusedTaskListener();
+                var locationListener = new LocationListener();
                 var locationSource = new TaskCompletionSource<Gps>();
                 locationListener.SetSource(locationSource);
 
@@ -83,7 +83,7 @@ namespace FoodNearMe.Droid.Services
             }
         }
 
-        private async Task StopFusedLocation(GoogleApiClient client, FusedTaskListener listener)
+        private async Task StopFusedLocation(GoogleApiClient client, LocationListener listener)
         {
             if (client.IsConnected)
             {

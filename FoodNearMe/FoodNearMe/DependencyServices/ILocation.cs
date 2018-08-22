@@ -1,7 +1,7 @@
 ﻿using FoodNearMe.Models;
 using System.Threading.Tasks;
 
-namespace FoodNearMe.Services
+namespace FoodNearMe.DependencyServices
 {
     public interface ILocation
     {

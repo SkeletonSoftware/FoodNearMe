@@ -1,12 +1,12 @@
-﻿using FoodNearMe.Services;
-using System;
+﻿using System;
 using Xamarin.Forms;
 using FoodNearMe.Models;
 using System.Threading.Tasks;
 using CoreLocation;
+using FoodNearMe.DependencyServices;
 
-[assembly: Dependency(typeof(FoodNearMe.iOS.Services.Location))]
-namespace FoodNearMe.iOS.Services
+[assembly: Dependency(typeof(FoodNearMe.iOS.DependencyServices.Location))]
+namespace FoodNearMe.iOS.DependencyServices
 {
     public class Location : ILocation
     {

@@ -38,21 +38,21 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Map.cs" />
+    <Compile Include="Controls\CustomMap.cs" />
     <Compile Include="DataAccess\WebService\Models\GetRestaurants.cs" />
     <Compile Include="DataAccess\WebService\RestaurantsWebRepository.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="MapPage.xaml.cs">
+      <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Managers\RestaurantManager.cs" />
     <Compile Include="Models\CustomPin.cs" />
     <Compile Include="Models\Gps.cs" />
     <Compile Include="Models\Restaurant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ILocation.cs" />
+    <Compile Include="DependencyServices\ILocation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainPage.xaml">
+    <EmbeddedResource Include="MapPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

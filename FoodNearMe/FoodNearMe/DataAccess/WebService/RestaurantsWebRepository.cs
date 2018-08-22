@@ -1,24 +1,18 @@
 ﻿using FoodNearMe.DataAccess.WebService.Models;
 using FoodNearMe.Models;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FoodNearMe.DataAccess.WebService
 {
     class RestaurantsWebRepository
     {
-        //TODO
-        private const string GoogleApiKey = "replace this with your api key";
-        
-        public async Task<List<Restaurant>> GetRestaurants(Gps location, int radiusInMeters)
+        public async Task<List<Restaurant>> GetRestaurants(Gps location, int radiusInMeters, string googleApiKey)
         {
             var client = new HttpClient();
-            string url = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={location}&radius={radiusInMeters}&type=restaurant&key={GoogleApiKey}";
+            string url = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={location}&radius={radiusInMeters}&type=restaurant&key={googleApiKey}";
             var response = await client.GetAsync(url);
             string data = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<RestaurantOutput>(data);

@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FoodNearMe"
              xmlns:map="clr-namespace:FoodNearMe.Controls"
-             x:Class="FoodNearMe.MainPage">
+             x:Class="FoodNearMe.MapPage">
     <StackLayout VerticalOptions="FillAndExpand">
-        <map:Map x:Name="map" />
+        <map:CustomMap x:Name="map" />
     </StackLayout>
 </ContentPage>

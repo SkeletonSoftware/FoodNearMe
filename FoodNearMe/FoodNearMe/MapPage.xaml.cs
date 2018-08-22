@@ -1,17 +1,17 @@
 ﻿using FoodNearMe.Managers;
 using FoodNearMe.Models;
-using FoodNearMe.Services;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System;
 using System.Threading.Tasks;
+using FoodNearMe.DependencyServices;
 
 namespace FoodNearMe
 {
-    public partial class MainPage : ContentPage
+    public partial class MapPage : ContentPage
     {
-        public MainPage()
+        public MapPage()
         {
             InitializeComponent();
         }
