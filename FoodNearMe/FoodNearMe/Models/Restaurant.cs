@@ -6,7 +6,7 @@
     {
         public string DisplayName { get; set; }
         public Gps Location { get; set; }
-        public RestaurantQuality Type { get; set; }
+        public RestaurantQuality Quality { get; set; }
         public string Description { get; set; }
     }
 }

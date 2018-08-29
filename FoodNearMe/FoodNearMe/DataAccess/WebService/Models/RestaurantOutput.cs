@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FoodNearMe.DataAccess.WebService.Models
+﻿namespace FoodNearMe.DataAccess.WebService.Models
 {
-
     public class RestaurantOutput
     {
         public object[] html_attributions { get; set; }
@@ -74,5 +67,4 @@ namespace FoodNearMe.DataAccess.WebService.Models
         public string photo_reference { get; set; }
         public int width { get; set; }
     }
-
 }

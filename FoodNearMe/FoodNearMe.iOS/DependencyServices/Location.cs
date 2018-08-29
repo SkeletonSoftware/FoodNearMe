@@ -10,9 +10,10 @@ namespace FoodNearMe.iOS.DependencyServices
 {
     public class Location : ILocation
     {
+        private CLLocationManager locationManager = new CLLocationManager();
+
         public async Task<Gps> GetLocation()
         {
-            var locationManager = new CLLocationManager();
             if (locationManager.Location == null)
             {
                 var source = new TaskCompletionSource<CLLocation>();
@@ -35,9 +36,41 @@ namespace FoodNearMe.iOS.DependencyServices
 
         public async Task<bool> RequestPermissions()
         {
-            var locationManager = new CLLocationManager();
+            if (CLLocationManager.Status == CLAuthorizationStatus.AuthorizedAlways || CLLocationManager.Status == CLAuthorizationStatus.AuthorizedWhenInUse)
+            {
+                return true;
+            }
+            if (CLLocationManager.Status == CLAuthorizationStatus.Denied || CLLocationManager.Status == CLAuthorizationStatus.Restricted)
+            {
+                return false;
+            }
+
+            var taskCompletionSource = new TaskCompletionSource<bool>();
+
+            locationManager.AuthorizationChanged += (sender, args) =>
+            {
+                if (args.Status != CLAuthorizationStatus.NotDetermined) //událost se poprvé vždy volá s tímto příznakem, chceme ale počkat až na reakci uživatele
+                {
+                    switch (args.Status)
+                    {
+                        case CLAuthorizationStatus.AuthorizedAlways:
+                        case CLAuthorizationStatus.AuthorizedWhenInUse:
+                            taskCompletionSource.TrySetResult(true);
+                            break;
+                        case CLAuthorizationStatus.Denied:
+                        case CLAuthorizationStatus.Restricted:
+                            taskCompletionSource.TrySetResult(false);
+                            break;
+                        default:
+                            taskCompletionSource.TrySetResult(false);
+                            break;
+                    }
+                }
+            };
+
             locationManager.RequestWhenInUseAuthorization();
-            return true;
+
+            return await taskCompletionSource.Task;
         }
     }
 }

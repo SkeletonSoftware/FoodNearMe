@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using FoodNearMe.Models;
-using Android.Gms.Location;
 using FoodNearMe.DependencyServices;
+using Android.Gms.Location;
 using Plugin.CurrentActivity;
-using Xamarin.Forms;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using Xamarin.Forms;
 
 [assembly: Dependency(typeof(FoodNearMe.Droid.DependencyServices.Location))]
 namespace FoodNearMe.Droid.DependencyServices
@@ -14,22 +14,15 @@ namespace FoodNearMe.Droid.DependencyServices
     {
         public async Task<Gps> GetLocation()
         {
-            if (await RequestPermissions())
-            {
-                var fusedLocationProviderClient = LocationServices.GetFusedLocationProviderClient(CrossCurrentActivity.Current.Activity);
+            var fusedLocationProviderClient = LocationServices.GetFusedLocationProviderClient(CrossCurrentActivity.Current.Activity);
 
-                Android.Locations.Location location = await fusedLocationProviderClient.GetLastLocationAsync();
+            Android.Locations.Location location = await fusedLocationProviderClient.GetLastLocationAsync();
 
-                Gps output = new Gps();
-                output.Latitude = location.Latitude;
-                output.Longitude = location.Longitude;
+            Gps output = new Gps();
+            output.Latitude = location.Latitude;
+            output.Longitude = location.Longitude;
 
-                return output;
-            }
-            else
-            {
-                return null;
-            }
+            return output;
         }
 
         public async Task<bool> RequestPermissions()
@@ -41,14 +34,7 @@ namespace FoodNearMe.Droid.DependencyServices
                 status = results[Permission.Location];
             }
 
-            if (status == PermissionStatus.Granted)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return status == PermissionStatus.Granted;
         }
     }
 }

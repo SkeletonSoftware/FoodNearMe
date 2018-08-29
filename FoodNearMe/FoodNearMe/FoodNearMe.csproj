@@ -40,7 +40,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CustomMap.cs" />
-    <Compile Include="DataAccess\WebService\Models\GetRestaurants.cs" />
+    <Compile Include="DataAccess\WebService\Models\RestaurantOutput.cs" />
     <Compile Include="DataAccess\WebService\RestaurantsWebRepository.cs" />
     <Compile Include="MapPage.xaml.cs">
       <DependentUpon>MapPage.xaml</DependentUpon>

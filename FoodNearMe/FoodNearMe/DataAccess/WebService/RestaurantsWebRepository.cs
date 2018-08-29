@@ -22,19 +22,21 @@ namespace FoodNearMe.DataAccess.WebService
         private List<Restaurant> LoadRestaurants(RestaurantOutput result)
         {
             var output = new List<Restaurant>(result.results.Length);
-            for (int i = 0; i < result.results.Length; i++)
+
+            foreach (var restaurant in result.results)
             {
                 output.Add(new Restaurant()
                 {
-                    DisplayName = result.results[i].name,
+                    DisplayName = restaurant.name,
                     Location = new Gps()
                     {
-                        Latitude = result.results[i].geometry.location.lat,
-                        Longitude = result.results[i].geometry.location.lng,
+                        Latitude = restaurant.geometry.location.lat,
+                        Longitude = restaurant.geometry.location.lng,
                     },
-                   Type = LoadRestaurantQuality(result.results[i].rating)
+                    Quality = LoadRestaurantQuality(restaurant.rating)
                 });
             }
+
             return output;
         }
 

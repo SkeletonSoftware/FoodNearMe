@@ -1,11 +1,11 @@
-﻿using FoodNearMe.Managers;
-using FoodNearMe.Models;
+﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using FoodNearMe.Managers;
+using FoodNearMe.Models;
+using FoodNearMe.DependencyServices;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
-using System;
-using System.Threading.Tasks;
-using FoodNearMe.DependencyServices;
 
 namespace FoodNearMe
 {
@@ -16,7 +16,7 @@ namespace FoodNearMe
             InitializeComponent();
         }
 
-        protected async override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
@@ -37,7 +37,7 @@ namespace FoodNearMe
             }
             else
             {
-                await DisplayAlert("Poloha", "Aplikace se nepodařilo získat vaší polohu", "OK");
+                await DisplayAlert("Poloha", "Aplikaci se nepodařilo získat vaší polohu", "OK");
             }
         }
 
@@ -65,7 +65,7 @@ namespace FoodNearMe
                 {
                     var pin = new CustomPin()
                     {
-                        Color = this.GetColorForType(item.Type),
+                        Color = this.GetColorForType(item.Quality),
                         Description = item.Description,
                         Location = item.Location,
                         Title = item.DisplayName,
@@ -80,9 +80,9 @@ namespace FoodNearMe
             switch (type)
             {
                 case RestaurantQuality.Bad:
-                    return Color.DarkRed;
-                case RestaurantQuality.Good:
                     return Color.Red;
+                case RestaurantQuality.Good:
+                    return Color.Orange;
                 case RestaurantQuality.VeryGood:
                     return Color.Yellow;
                 case RestaurantQuality.Amazing:
